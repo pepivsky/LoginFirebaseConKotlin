@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".AuthActivity">
+    tools:context=".AuthActivity"
+    android:id="@+id/authLayout"
+    >
 
     <EditText
         android:id="@+id/edtEmail"
@@ -34,7 +36,8 @@
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spaceEdt" />
+        app:layout_constraintTop_toBottomOf="@id/spaceEdt"
+         />
 
     <Button
         android:id="@+id/btnRegistro"
@@ -68,7 +71,27 @@
         android:text="login"
         />
 
+    <Space
+        android:id="@+id/btnGoogleSpace"
+        android:layout_width="0dp"
+        android:layout_height="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnRegistro"
+        />
 
+    <Button
+        android:id="@+id/btnGoogleSign"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/google_icon"
+        android:text="Google"
+        android:textAlignment="textStart"
+
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnGoogleSpace" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

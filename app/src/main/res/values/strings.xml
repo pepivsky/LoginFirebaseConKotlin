@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">LoginFirebaseConKotlin</string>
+    <string name="prefs_file">com.pepivsky.loginfirebaseconkotlin.PREFERENCE_FILE_KEY</string>
 </resources>
