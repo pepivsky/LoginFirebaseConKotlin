@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "64916856470",
+    "firebase_url": "https://loginfirebaseconkotlin.firebaseio.com",
+    "project_id": "loginfirebaseconkotlin",
+    "storage_bucket": "loginfirebaseconkotlin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64916856470:android:c8a8a09c79dde22457ecb7",
+        "android_client_info": {
+          "package_name": "com.pepivsky.loginfirebaseconkotlin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "64916856470-0c4eqsfann78ii72pd75f0o3ci36i0t1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCX5O_qKck1KC4gkhlkuwcNKTH3MIPdYr4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "64916856470-0c4eqsfann78ii72pd75f0o3ci36i0t1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
