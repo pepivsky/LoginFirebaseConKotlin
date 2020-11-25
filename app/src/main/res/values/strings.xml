@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">LoginFirebaseConKotlin</string>
     <string name="prefs_file">com.pepivsky.loginfirebaseconkotlin.PREFERENCE_FILE_KEY</string>
+    <!--claves para el login de Facebook-->
+    <string name="facebook_app_id">194588462134583</string>
+    <string name="fb_login_protocol_scheme">fb194588462134583</string>
+
 </resources>

@@ -87,11 +87,37 @@
         android:drawableLeft="@drawable/google_icon"
         android:text="Google"
         android:textAlignment="textStart"
+        android:drawableTint="@color/white"
 
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnGoogleSpace" />
+
+    <Space
+        android:id="@+id/btnFacebookSpace"
+        android:layout_width="0dp"
+        android:layout_height="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnGoogleSign"
+        />
+
+    <Button
+        android:id="@+id/btnFacebookSign"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnFacebookSpace"
+        android:drawableTint="@color/white"
+        android:drawableLeft="@drawable/facebook_icon"
+        android:text="facebook"
+        android:textAlignment="textStart"
+
+        />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

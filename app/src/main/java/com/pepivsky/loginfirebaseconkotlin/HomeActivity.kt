@@ -6,11 +6,13 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import com.facebook.login.LoginManager
 import com.google.firebase.auth.FirebaseAuth
 
 enum class ProviderType {
     EMAil,
-    GOOGLE
+    GOOGLE,
+    FACEBOOK
 }
 class HomeActivity : AppCompatActivity() {
     private lateinit var tvEmail: TextView
@@ -57,6 +59,11 @@ class HomeActivity : AppCompatActivity() {
             val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit() //aceso al fichero de modo privado
             prefs.clear()
             prefs.apply()
+
+            //deslogueo de FaceBook
+            if (provider == ProviderType.FACEBOOK.name) {
+                LoginManager.getInstance().logOut() //cerrando sesion
+            }
 
             FirebaseAuth.getInstance().signOut() //hacer logout de firebase
             onBackPressed() //volver a la pantalla anterior

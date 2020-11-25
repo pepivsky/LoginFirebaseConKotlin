@@ -8,11 +8,18 @@ import android.text.Layout
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
@@ -23,8 +30,10 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var edtEmal: EditText
     private lateinit var edtPassword: EditText
     private lateinit var authLayout: ConstraintLayout
+    private lateinit var btnFacebookSign: Button
 
-    private val  GOOGLE_SIGN_IN = 100
+    private val  GOOGLE_SIGN_IN = 100 //constante para google
+    private val callbackManager = CallbackManager.Factory.create()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +45,7 @@ class AuthActivity : AppCompatActivity() {
         edtPassword = findViewById(R.id.edtPassword)
         authLayout = findViewById(R.id.authLayout)
         btnGooogleSign = findViewById(R.id.btnGoogleSign)
+        btnFacebookSign = findViewById(R.id.btnFacebookSign)
 
 
         //setup login
@@ -126,6 +136,38 @@ class AuthActivity : AppCompatActivity() {
 
         }
 
+        //logueo con la cuenta de facebook
+        btnFacebookSign.setOnClickListener {
+            LoginManager.getInstance().logInWithReadPermissions(this, listOf("email")) //le pasamos una ista con un activity y una lista de permisos o de los datos que queremos traer (por defecto siempre se recibe el nombre y la foto)
+            //loginManager: clase de la libnreria de Facebook
+            LoginManager.getInstance().registerCallback(callbackManager,
+            object : FacebookCallback<LoginResult> {
+
+                override fun onSuccess(result: LoginResult?) {//registro exitoso
+                    result?.let {
+                        val token = it.accessToken //token de autenticacion
+                        val credential = FacebookAuthProvider.getCredential(token.token)
+                        FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener { //enviar la credencial a firebase y se agrega un addCompleteListener para manejar cuando la operacion se complete
+
+                            if (it.isSuccessful) {//comprobar que la operacion fue exitosa, si es asi vamos al home
+                                showHome(it.result?.user?.email ?: "email vacio", ProviderType.FACEBOOK)
+                            } else {
+                                showAlert() //si algo no sale bien entonces mostramos el alert
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancel() { //cancelado
+                    Toast.makeText(this@AuthActivity, "Login Cancelado :o ", Toast.LENGTH_LONG).show()
+                }
+
+                override fun onError(error: FacebookException?) { //error
+                    showAlert()
+                }
+            })
+        }
+
     }
 
 
@@ -148,6 +190,9 @@ class AuthActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        callbackManager.onActivityResult(requestCode, resultCode, data) //para facebook
+
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GOOGLE_SIGN_IN) {
             //recuperar la respuesta
