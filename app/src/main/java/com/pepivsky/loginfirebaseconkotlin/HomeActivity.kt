@@ -32,8 +32,6 @@ class HomeActivity : AppCompatActivity() {
 
     private val db = FirebaseFirestore.getInstance()
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -45,7 +43,7 @@ class HomeActivity : AppCompatActivity() {
 
         //obtener datos del bundle
         val bundle = intent.extras
-        val email = bundle!!.getString("email")
+        val email = bundle?.getString("email")
         val provider = bundle?.getString("provider")
 
 
@@ -54,15 +52,18 @@ class HomeActivity : AppCompatActivity() {
 
         //setup
         setup(email ?: "vacio", provider ?: "vacio") //pasarle los datos
+        saveUserSession(email, provider) //guardar la sesion del usuario
 
-        /*
-        guardar la sesion del usuario para que una vez que se logee no vuelva a pedir los datos de autenticacion
-         */
-        val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit() //aceso al fichero de modo privado
-        //colocando datos en el sharedPreferences
-        prefs.putString("email", email)
-        prefs.putString("provider", provider)
-        prefs.apply()
+        Log.i("Entrando Oncreate", "Entrando en oncreate")
+
+
+
+       /* if (provider != null && email != null) {//crea el usuario en firestore
+            createUserInFirestore(email, provider)
+            Log.i("OnCreate" ,"creando usuario")
+        }*/
+
+
     }
 
     private fun setup(email: String, provider: String) {
@@ -70,6 +71,8 @@ class HomeActivity : AppCompatActivity() {
         //seteando los valores
         tvEmail.text = email
         tvProvider.text = provider
+
+
 
         //logout
         btnLogOut.setOnClickListener {
@@ -102,11 +105,11 @@ class HomeActivity : AppCompatActivity() {
                     FlashCard("rat", "rata"),
                     FlashCard("green", "verde")
                 ))
-            //TODO comprobar primero si el usuario existe en firestore antes de crearlo
-            createUserInFirestore(email, provider) //crea el usuario en firestore, si existe, reemplaza el contenido
-            addCollectionToBD(collection1, email) //agrega la coleccion a la base de datos
 
-            //agrega una nueva collecion a la lista de colecciones del usuario
+            //createUserInFirestore(email, provider) //crea el usuario en firestore, si existe, reemplaza el contenido
+            addCollectionToBD(collection1, email) //agrega una nueva collecion a la lista de colecciones del usuario
+
+
 
 
 
@@ -114,6 +117,16 @@ class HomeActivity : AppCompatActivity() {
 
         }
 
+    }
+
+    private fun saveUserSession(email: String?, provider: String?) {
+        //guardar la sesion del usuario para que una vez que se logee no vuelva a pedir los datos de autenticacion
+
+        val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit() //aceso al fichero de modo privado
+        //colocando datos en el sharedPreferences
+        prefs.putString("email", email)
+        prefs.putString("provider", provider)
+        prefs.apply()
     }
 
     private fun createUserInFirestore(email: String, provider: String) {

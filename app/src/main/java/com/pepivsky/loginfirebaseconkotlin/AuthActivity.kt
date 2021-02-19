@@ -22,6 +22,9 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
+import com.pepivsky.loginfirebaseconkotlin.model.Collection
+import com.pepivsky.loginfirebaseconkotlin.model.User
 
 class AuthActivity : AppCompatActivity() {
     private lateinit var btnRegistro: Button
@@ -34,6 +37,7 @@ class AuthActivity : AppCompatActivity() {
 
     private val  GOOGLE_SIGN_IN = 100 //constante para google
     private val callbackManager = CallbackManager.Factory.create()
+    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +92,7 @@ class AuthActivity : AppCompatActivity() {
                 ).addOnCompleteListener {
 
                     if (it.isSuccessful) {//comprobar que la operacion fue exitosa, si es asi vamos al home
+                        //TODO crear usuario en firestore
                         showHome(it.result?.user?.email ?: "no hay correo", ProviderType.EMAil)
                     } else {
                         showAlert()
@@ -176,6 +181,29 @@ class AuthActivity : AppCompatActivity() {
             putExtra("provider", provider.name)
         }
         startActivity(homeIntent)
+    }
+
+    /*
+    //revisar si existe usuario y si no, lo crea
+        val docRef = db.collection("users").document(email!!)
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document.data != null) {
+                    Log.d("Existe", "DocumentSnapshot data: ${document.data}")
+                    Log.i("document", "$document")
+                } else {
+                    Log.d("No existe", "No such document")
+                    createUserInFirestore(email, provider!!)
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("Algo fallo", "get failed with ", exception)
+            }
+     */
+
+    private fun createUserInFirestore(email: String, provider: String) {
+        val user = User(provider,mutableListOf<Collection>())
+        db.collection("users").document(email).set(user)
     }
 
     private fun showAlert() {
