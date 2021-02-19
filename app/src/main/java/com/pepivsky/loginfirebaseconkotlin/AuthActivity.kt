@@ -47,7 +47,6 @@ class AuthActivity : AppCompatActivity() {
         btnGooogleSign = findViewById(R.id.btnGoogleSign)
         btnFacebookSign = findViewById(R.id.btnFacebookSign)
 
-
         //setup login
         setup()
         //comprobar si existe una sesion activa

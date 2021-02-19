@@ -8,6 +8,13 @@ import android.widget.Button
 import android.widget.TextView
 import com.facebook.login.LoginManager
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+import com.pepivsky.loginfirebaseconkotlin.model.City
+import com.pepivsky.loginfirebaseconkotlin.model.Collection
+import com.pepivsky.loginfirebaseconkotlin.model.FlashCard
+import com.pepivsky.loginfirebaseconkotlin.model.User
 
 enum class ProviderType {
     EMAil,
@@ -19,6 +26,14 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var tvProvider: TextView
     private lateinit var btnLogOut: Button
 
+
+    private lateinit var btnGuardar: Button
+
+
+    private val db = FirebaseFirestore.getInstance()
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -26,11 +41,14 @@ class HomeActivity : AppCompatActivity() {
         tvEmail = findViewById(R.id.tvEmail)
         tvProvider = findViewById(R.id.tvProveedor)
         btnLogOut = findViewById(R.id.btnLogout)
+        btnGuardar = findViewById(R.id.btnGuardar)
 
         //obtener datos del bundle
         val bundle = intent.extras
-        val email = bundle?.getString("email")
+        val email = bundle!!.getString("email")
         val provider = bundle?.getString("provider")
+
+
 
         Log.i("bundle", "email $email provider $provider")
 
@@ -69,5 +87,44 @@ class HomeActivity : AppCompatActivity() {
             onBackPressed() //volver a la pantalla anterior
         }
 
+        btnGuardar.setOnClickListener {
+            //crear objeto dummy
+            val collection1 = Collection("palabras nuevas",
+                mutableListOf(
+                    FlashCard("car", "car"),
+                    FlashCard("cat", "gato"),
+                    FlashCard("dog", "perro")
+                ))
+
+            val collection2 = Collection("test",
+                mutableListOf(
+                    FlashCard("road", "calle"),
+                    FlashCard("rat", "rata"),
+                    FlashCard("green", "verde")
+                ))
+            //TODO comprobar primero si el usuario existe en firestore antes de crearlo
+            createUserInFirestore(email, provider) //crea el usuario en firestore, si existe, reemplaza el contenido
+            addCollectionToBD(collection1, email) //agrega la coleccion a la base de datos
+
+            //agrega una nueva collecion a la lista de colecciones del usuario
+
+
+
+
+
+        }
+
     }
+
+    private fun createUserInFirestore(email: String, provider: String) {
+        val user = User(provider,mutableListOf<Collection>())
+        db.collection("users").document(email).set(user)
+    }
+
+    private fun addCollectionToBD(collection: Collection, email: String) {
+        val refUser = db.collection("users").document(email)
+        refUser.update("collections", FieldValue.arrayUnion(collection))
+    }
+
+
 }
