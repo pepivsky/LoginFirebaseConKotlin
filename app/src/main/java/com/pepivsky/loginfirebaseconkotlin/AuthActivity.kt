@@ -92,8 +92,9 @@ class AuthActivity : AppCompatActivity() {
                 ).addOnCompleteListener {
 
                     if (it.isSuccessful) {//comprobar que la operacion fue exitosa, si es asi vamos al home
-                        //TODO crear usuario en firestore
-                        showHome(it.result?.user?.email ?: "no hay correo", ProviderType.EMAil)
+                        val email = it.result?.user?.email ?: "no hay correo"
+                        createUserInFirestore(email, ProviderType.EMAil.toString())
+                        showHome(email, ProviderType.EMAil)
                     } else {
                         showAlert()
                     }
@@ -154,7 +155,9 @@ class AuthActivity : AppCompatActivity() {
                         FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener { //enviar la credencial a firebase y se agrega un addCompleteListener para manejar cuando la operacion se complete
 
                             if (it.isSuccessful) {//comprobar que la operacion fue exitosa, si es asi vamos al home
-                                showHome(it.result?.user?.email ?: "email vacio", ProviderType.FACEBOOK)
+                                val email = it.result?.user?.email ?: "email vacio"
+                                createUserInFirestore(email, ProviderType.FACEBOOK.toString())
+                                showHome(email, ProviderType.FACEBOOK)
                             } else {
                                 showAlert() //si algo no sale bien entonces mostramos el alert
                             }
@@ -227,13 +230,15 @@ class AuthActivity : AppCompatActivity() {
 
             try {
                 val account = task.getResult(ApiException::class.java)
-                //si esto sale bioen ya tendremos el email
+                //si esto sale bien ya tendremos el email
                 if (account != null) {//si la cuenta no es nula recuperamos su credencial
                     val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                     FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener { //enviar la credencial a firebase y se agrega un addCompleteListener para manejar cuando la operacion se complete
 
                         if (it.isSuccessful) {//comprobar que la operacion fue exitosa, si es asi vamos al home
-                            showHome(account.email ?: "email vacio", ProviderType.GOOGLE)
+                            val email = account.email ?: "email vacio"
+                            createUserInFirestore(email, ProviderType.GOOGLE.toString()) //crea el usuario antes de pasar al home
+                            showHome(email, ProviderType.GOOGLE)
                         } else {
                             showAlert()
                         }
