@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:padding="20dp"
+    >
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="0dp"
+        android:layout_height="220dp"
+        android:layout_weight="1"
+        app:cardCornerRadius="10dp"
+
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/black"
+        app:cardElevation="0dp"
+
+        >
+        
+        <EditText
+            android:id="@+id/edtConcept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Concepto"
+            android:layout_gravity="center"
+            />
+        
+    </com.google.android.material.card.MaterialCardView>
+
+    <Space
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        />
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="0dp"
+        android:layout_height="220dp"
+        android:layout_weight="1"
+        app:cardCornerRadius="10dp"
+
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/black"
+        app:cardElevation="0dp"
+
+        >
+
+
+        <EditText
+            android:id="@+id/edtDefinition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Definicion"
+            android:layout_gravity="center"
+
+            />
+
+        <!--android:backgroundTint="@android:color/holo_red_light"
+        android:textColorHint="@android:color/holo_red_light"-->
+
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

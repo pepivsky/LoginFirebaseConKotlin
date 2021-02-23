@@ -1,10 +1,9 @@
-package com.pepivsky.loginfirebaseconkotlin
+package com.pepivsky.loginfirebaseconkotlin.view
 
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Layout
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -23,6 +22,7 @@ import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.pepivsky.loginfirebaseconkotlin.R
 import com.pepivsky.loginfirebaseconkotlin.model.Collection
 import com.pepivsky.loginfirebaseconkotlin.model.User
 

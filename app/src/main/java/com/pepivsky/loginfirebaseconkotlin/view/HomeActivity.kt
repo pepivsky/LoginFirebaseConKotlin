@@ -1,20 +1,23 @@
-package com.pepivsky.loginfirebaseconkotlin
+package com.pepivsky.loginfirebaseconkotlin.view
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import com.facebook.login.LoginManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
-import com.pepivsky.loginfirebaseconkotlin.model.City
+import com.pepivsky.loginfirebaseconkotlin.R
 import com.pepivsky.loginfirebaseconkotlin.model.Collection
-import com.pepivsky.loginfirebaseconkotlin.model.FlashCard
-import com.pepivsky.loginfirebaseconkotlin.model.User
 
 enum class ProviderType {
     EMAil,
@@ -22,12 +25,18 @@ enum class ProviderType {
     FACEBOOK
 }
 class HomeActivity : AppCompatActivity() {
+
+    private lateinit var bottomNavigationView: BottomNavigationView
+
     private lateinit var tvEmail: TextView
     private lateinit var tvProvider: TextView
     private lateinit var btnLogOut: Button
 
 
     private lateinit var btnGuardar: Button
+
+    private lateinit var provider: String
+    lateinit var email: String
 
 
     private val db = FirebaseFirestore.getInstance()
@@ -36,15 +45,15 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        tvEmail = findViewById(R.id.tvEmail)
-        tvProvider = findViewById(R.id.tvProveedor)
-        btnLogOut = findViewById(R.id.btnLogout)
-        btnGuardar = findViewById(R.id.btnGuardar)
+        //tvEmail = findViewById(R.id.tvEmail)
+        //tvProvider = findViewById(R.id.tvProveedor)
+        //btnLogOut = findViewById(R.id.btnLogout)
+        //btnGuardar = findViewById(R.id.btnGuardar)
 
         //obtener datos del bundle
         val bundle = intent.extras
-        val email = bundle?.getString("email")
-        val provider = bundle?.getString("provider")
+        email = bundle?.getString("email") ?: "email vacio"
+        provider = bundle?.getString("provider") ?: "provider"
 
 
 
@@ -67,15 +76,16 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setup(email: String, provider: String) {
+        setUpNavigation()
         title = "Inicio"
         //seteando los valores
-        tvEmail.text = email
-        tvProvider.text = provider
+        //tvEmail.text = email
+        //tvProvider.text = provider
 
 
 
         //logout
-        btnLogOut.setOnClickListener {
+        /*btnLogOut.setOnClickListener {
             //borrado de datos
             val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit() //aceso al fichero de modo privado
             prefs.clear()
@@ -88,9 +98,9 @@ class HomeActivity : AppCompatActivity() {
 
             FirebaseAuth.getInstance().signOut() //hacer logout de firebase
             onBackPressed() //volver a la pantalla anterior
-        }
+        }*/
 
-        btnGuardar.setOnClickListener {
+        /*btnGuardar.setOnClickListener {
             //crear objeto dummy
             val collection1 = Collection("palabras nuevas",
                 mutableListOf(
@@ -109,13 +119,7 @@ class HomeActivity : AppCompatActivity() {
             //createUserInFirestore(email, provider) //crea el usuario en firestore, si existe, reemplaza el contenido
             addCollectionToBD(collection1, email) //agrega una nueva collecion a la lista de colecciones del usuario
 
-
-
-
-
-
-
-        }
+        }*/
 
     }
 
@@ -129,9 +133,40 @@ class HomeActivity : AppCompatActivity() {
         prefs.apply()
     }
 
-    private fun createUserInFirestore(email: String, provider: String) {
-        val user = User(provider,mutableListOf<Collection>())
-        db.collection("users").document(email).set(user)
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_home, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.action_logOut -> {
+                //borrado de datos
+                val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit() //aceso al fichero de modo privado
+                prefs.clear()
+                prefs.apply()
+
+                //deslogueo de FaceBook
+                if (provider == ProviderType.FACEBOOK.name) {
+                    LoginManager.getInstance().logOut() //cerrando sesion
+                }
+
+                FirebaseAuth.getInstance().signOut() //hacer logout de firebase
+                onBackPressed() //volver a la pantalla anterior
+                true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    fun setUpNavigation() { //funcion que configura el bottom navigation para funcionar con el nav graph (el recurso de menu debe tener los mismos ids del fragment id en el nav graph para que funcione)
+        bottomNavigationView = findViewById(R.id.bottom_navigation)
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        NavigationUI.setupWithNavController(
+            bottomNavigationView,
+            navHostFragment.navController
+        )
     }
 
     private fun addCollectionToBD(collection: Collection, email: String) {
