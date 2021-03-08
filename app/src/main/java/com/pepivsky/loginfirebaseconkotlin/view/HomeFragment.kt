@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
@@ -56,7 +57,7 @@ class HomeFragment : Fragment() {
         rvCollections = view.findViewById(R.id.rvCollections)
         //edtBuscar = view.findViewById(R.id.edtSearch)
 
-        initRecycler()
+
 
         /*edtBuscar.setFocusableInTouchMode(false);
         edtBuscar.setFocusable(false);
@@ -64,19 +65,40 @@ class HomeFragment : Fragment() {
         edtBuscar.setFocusable(true);*/
         //TODO recuperar los datos de Firestore
         //obteniendo el email desde las shared preferences
-        /*val sharedPref = activity?.getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
+        val sharedPref = activity?.getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
         email = sharedPref?.getString("email", "email vacio").toString()
         Log.i("HomeFragment", "$email")
 
+        if (Collections.collectionsList.isEmpty()) { //si la lista esta vacia, consulta firebase
+            getCollections(email)
+        } else {
+            initRecycler()
+        }
+
+
+    }
+
+    private fun getCollections(email: String) {
         val docRef = db.collection("users").document(email)
         docRef.get().addOnSuccessListener { documentSnapshot ->
             val user = documentSnapshot.toObject<User>()
             Log.i("Home", "${user?.collections}")
-        }*/
+            if (user?.collections?.isNotEmpty() == true) {
+                user?.collections?.forEach { Collections.collectionsList.add(it) }
+                initRecycler()
+            } else { //lista vacia
+                //mostrar un mensaje o boton para crear una coleccion
+                Toast.makeText(activity, "Vaya parece que no tienes colecciones, crea una :)", Toast.LENGTH_LONG).show()
+            }
 
+        }
+        //se llama si algo salio mal
+        docRef.get().addOnFailureListener {
+            Toast.makeText(activity,"Vaya, algo ha salido mal :(", Toast.LENGTH_LONG).show()
+        }
     }
 
-    fun initRecycler() {
+    private fun initRecycler() {
         rvCollections.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         val adapter = CollectionAdapter(Collections.collectionsList) //se le pasa la lista
         rvCollections.adapter = adapter

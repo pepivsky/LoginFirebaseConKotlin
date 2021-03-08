@@ -18,6 +18,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.pepivsky.loginfirebaseconkotlin.R
 import com.pepivsky.loginfirebaseconkotlin.model.Collection
+import com.pepivsky.loginfirebaseconkotlin.model.Collections
 
 enum class ProviderType {
     EMAil,
@@ -153,6 +154,8 @@ class HomeActivity : AppCompatActivity() {
 
                 FirebaseAuth.getInstance().signOut() //hacer logout de firebase
                 onBackPressed() //volver a la pantalla anterior
+                //limpiar la lista al cerrar sesion
+                Collections.collectionsList.clear()
                 true
             }
             else -> return super.onOptionsItemSelected(item)

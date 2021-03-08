@@ -13,8 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LoginFirebaseConKotlin">
-        <activity android:name=".view.HomeActivity"></activity>
-        <activity android:name=".QuizzActivity"></activity>
+        <activity android:name=".view.HomeActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            >
+        </activity>
+        <activity android:name=".view.QuizzActivity"></activity>
         <activity android:name=".view.AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
