@@ -3,7 +3,9 @@ package com.pepivsky.loginfirebaseconkotlin.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageButton
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
 import com.pepivsky.loginfirebaseconkotlin.model.Collections
 import com.pepivsky.loginfirebaseconkotlin.model.FlashCard
@@ -12,6 +14,7 @@ import com.pepivsky.loginfirebaseconkotlin.R
 class QuizzActivity : AppCompatActivity(),  CardFragment.OnButtonListener, QuizzFragmentConcept.OnButtonListener, QuizzFragmentDefinition.OnButtonListener, QuizzFragmentInput.OnButtonListener {
 
     lateinit var progressBar: RoundCornerProgressBar
+    lateinit var btnExitQuizz: ImageButton
 
     //private val cardsList = MutableList<FlashCard>()
     private lateinit var list: List<FlashCard> //lista de flashCards
@@ -26,6 +29,8 @@ class QuizzActivity : AppCompatActivity(),  CardFragment.OnButtonListener, Quizz
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quizz)
+
+        //supportActionBar?.hide(); // ocultar el toolbar
 
         //obtener el extra con el index
         var bundle: Bundle? = intent.extras
@@ -51,8 +56,18 @@ class QuizzActivity : AppCompatActivity(),  CardFragment.OnButtonListener, Quizz
         //private val cardsList = mutableListOf<Card>
 
         newFragmentCard() //agregar el primer fragment
+        initUI()
 
+
+    }
+
+    private fun initUI() {
         initProgressBar()
+
+        btnExitQuizz = findViewById(R.id.cancelButton)
+        btnExitQuizz.setOnClickListener {
+            onBackPressed()
+        }
     }
 
     private fun initProgressBar() {
@@ -196,5 +211,21 @@ class QuizzActivity : AppCompatActivity(),  CardFragment.OnButtonListener, Quizz
                 }
             }
         }
+    }
+
+    override fun onBackPressed() {
+        //show dialog
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("¿Estás seguro que deseas salir?")
+        builder.setMessage("Perderás el progreso de tu sesión de estudio")
+
+        builder.setPositiveButton(R.string.dialog_exit) { dialog, which ->
+            super.onBackPressed()
+        }
+
+        builder.setNegativeButton(R.string.dialog_cancel) { dialog, which ->
+            dialog.dismiss()
+        }
+        builder.show()
     }
 }

@@ -9,7 +9,7 @@
     android:paddingEnd="20dp"
     android:paddingTop="20dp"
 
-    tools:context=".QuizzActivity">
+    tools:context=".view.QuizzActivity">
 
     <LinearLayout
         android:id="@+id/linearPB"
