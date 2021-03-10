@@ -28,6 +28,8 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_close"
             android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:tint="@color/teal_200"
             />
 
         <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
