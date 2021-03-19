@@ -184,6 +184,7 @@ class AuthActivity : AppCompatActivity() {
             putExtra("provider", provider.name)
         }
         startActivity(homeIntent)
+        finish() //termina el activity para que no se pueda regresar al login
     }
 
     /*

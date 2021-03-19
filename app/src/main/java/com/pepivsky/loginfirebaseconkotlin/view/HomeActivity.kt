@@ -1,14 +1,13 @@
 package com.pepivsky.loginfirebaseconkotlin.view
 
 import android.content.Context
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.facebook.login.LoginManager
@@ -143,7 +142,10 @@ class HomeActivity : AppCompatActivity() {
         return when(item.itemId) {
             R.id.action_logOut -> {
                 //borrado de datos
-                val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit() //aceso al fichero de modo privado
+                val prefs = getSharedPreferences(
+                    getString(R.string.prefs_file),
+                    Context.MODE_PRIVATE
+                ).edit() //aceso al fichero de modo privado
                 prefs.clear()
                 prefs.apply()
 
@@ -175,6 +177,11 @@ class HomeActivity : AppCompatActivity() {
     private fun addCollectionToBD(collection: Collection, email: String) {
         val refUser = db.collection("users").document(email)
         refUser.update("collections", FieldValue.arrayUnion(collection))
+    }
+
+    //evita que se pueda regresar al login
+    override fun onBackPressed() {
+        moveTaskToBack(true)
     }
 
 
