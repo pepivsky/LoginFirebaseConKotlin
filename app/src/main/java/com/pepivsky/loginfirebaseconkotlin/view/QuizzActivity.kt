@@ -30,7 +30,7 @@ class QuizzActivity : AppCompatActivity(),  CardFragment.OnButtonListener, Quizz
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quizz)
 
-        //supportActionBar?.hide(); // ocultar el toolbar
+        supportActionBar?.hide(); // ocultar el toolbar
 
         //obtener el extra con el index
         var bundle: Bundle? = intent.extras
