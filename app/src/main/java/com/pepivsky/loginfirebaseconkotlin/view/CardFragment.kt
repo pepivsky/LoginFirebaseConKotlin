@@ -124,43 +124,62 @@ class CardFragment : Fragment(), View.OnClickListener {
         back_anim = AnimatorInflater.loadAnimator(context, R.animator.back_animator) as AnimatorSet
 
         //girar card al darle tap (hay que quitarle la elevacion para que se vea bien)
+        //girar card al darle tap (hay que quitarle la elevacion para que se vea bien)
         cardFront.setOnClickListener {
             if (isFront) {
-                front_anim.setTarget(cardFront)
-                back_anim.setTarget(cardBack)
 
-                front_anim.start()
-                back_anim.start()
+                if (!front_anim.isRunning && !back_anim.isRunning ) {
+                    //front_anim.
+                    front_anim.setTarget(cardFront)
+                    back_anim.setTarget(cardBack)
 
-                isFront = false
+                    front_anim.start()
+                    back_anim.start()
+                    isFront = false
+                }
+
             } else {
-                front_anim.setTarget(cardBack)
-                back_anim.setTarget(cardFront)
 
-                back_anim.start()
-                front_anim.start()
+                if (!front_anim.isRunning && !back_anim.isRunning ) {
+                    front_anim.setTarget(cardBack)
+                    back_anim.setTarget(cardFront)
 
-                isFront = true
+
+                    back_anim.start()
+                    front_anim.start()
+                    isFront = true
+                }
+
+
             }
         }
 
         cardBack.setOnClickListener {
             if (isFront) {
-                front_anim.setTarget(cardFront)
-                back_anim.setTarget(cardBack)
 
-                front_anim.start()
-                back_anim.start()
 
-                isFront = false
+                if (!front_anim.isRunning && !back_anim.isRunning ) {
+                    front_anim.setTarget(cardFront)
+                    back_anim.setTarget(cardBack)
+
+                    back_anim.start()
+                    front_anim.start()
+                    isFront = false
+                }
+
+
             } else {
-                front_anim.setTarget(cardBack)
-                back_anim.setTarget(cardFront)
 
-                back_anim.start()
-                front_anim.start()
+                if (!front_anim.isRunning && !back_anim.isRunning ) {
+                    front_anim.setTarget(cardBack)
+                    back_anim.setTarget(cardFront)
 
-                isFront = true
+                    back_anim.start()
+                    front_anim.start()
+                    isFront = true
+                }
+
+
             }
         }
     }
