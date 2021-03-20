@@ -100,8 +100,9 @@ class HomeFragment : Fragment() {
 
     private fun initRecycler() {
         rvCollections.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        val adapter = CollectionAdapter(Collections.collectionsList) //se le pasa la lista
+        val adapter = CollectionAdapter(Collections.collectionsList, email) //se le pasa la lista
         rvCollections.adapter = adapter
+        //adapter.notifyDataSetChanged()
     }
 
 }

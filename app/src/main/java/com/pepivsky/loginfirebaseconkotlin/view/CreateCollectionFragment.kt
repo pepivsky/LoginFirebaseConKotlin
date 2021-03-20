@@ -114,8 +114,22 @@ class CreateCollectionFragment : Fragment() {
     private fun addCollectionToBD(collection: Collection, email: String) {
         val refUser = db.collection("users").document(email)
         refUser.update("collections", FieldValue.arrayUnion(collection))
+        //refUser.update("collections", FieldValue.arrayRemove(collection))
+
         //refUser.update("collections", FieldValue.delete())
     }
+
+    companion object {
+
+        fun deleteCollectionToBD(collection: Collection, email: String) {
+            val refUser = FirebaseFirestore.getInstance().collection("users").document(email)
+            //refUser.update("collections", FieldValue.arrayUnion(collection))
+            refUser.update("collections", FieldValue.arrayRemove(collection))
+
+            //refUser.update("collections", FieldValue.delete())
+        }
+    }
+
     /*override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
