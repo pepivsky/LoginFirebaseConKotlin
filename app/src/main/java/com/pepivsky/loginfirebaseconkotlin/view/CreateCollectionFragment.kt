@@ -114,9 +114,10 @@ class CreateCollectionFragment : Fragment() {
     private fun addCollectionToBD(collection: Collection, email: String) {
         val refUser = db.collection("users").document(email)
         refUser.update("collections", FieldValue.arrayUnion(collection))
-        //refUser.update("collections", FieldValue.arrayRemove(collection))
 
-        //refUser.update("collections", FieldValue.delete())
+        if (Collections.collectionsList.isNotEmpty()) {
+            Collections.collectionsList.add(collection)
+        }
     }
 
     companion object {
