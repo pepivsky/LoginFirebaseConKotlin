@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import com.google.android.material.snackbar.Snackbar
 import com.pepivsky.loginfirebaseconkotlin.R
 import com.pepivsky.loginfirebaseconkotlin.model.FlashCard
 
@@ -53,10 +54,35 @@ class QuizzFragmentInput : Fragment(), View.OnClickListener {
 
         //onclick del boton
         btnContinue.setOnClickListener {
-            callback?.onButtonClicked()
+            if (edtConcept.text.isNotBlank()) {//check if is correct
+                if (edtConcept.text.toString().toLowerCase()
+                        .contains(card?.definition.toString().toLowerCase())
+                ) {
+                    colorizeCorrect(btnContinue)
+                } else {
+                    colorizeIncorrect(btnContinue)
+                }
+
+                btnContinue.postDelayed({
+                    btnContinue.setBackgroundColor(resources.getColor(R.color.purple_500, null))
+                    callback?.onButtonClicked()
+                }, 1000)
+
+            } else {
+                Snackbar.make(btnContinue, "El campo no debe estar vacio", Snackbar.LENGTH_SHORT)
+                    .show()
+            }
         }
         return view
 
+    }
+
+    private fun colorizeIncorrect(button: Button) {
+        button.setBackgroundColor(resources.getColor(R.color.red, null))
+    }
+
+    private fun colorizeCorrect(button: Button) {
+        button.setBackgroundColor(resources.getColor(R.color.green, null))
     }
 
     companion object {
@@ -85,7 +111,7 @@ class QuizzFragmentInput : Fragment(), View.OnClickListener {
     }
 
     //interface para que el activity controle el onClic y pueda crear fragments
-    interface OnButtonListener{
+    interface OnButtonListener {
         fun onButtonClicked()
     }
 

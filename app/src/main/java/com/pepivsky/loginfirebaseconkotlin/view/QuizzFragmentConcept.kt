@@ -1,5 +1,6 @@
 package com.pepivsky.loginfirebaseconkotlin.view
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -26,7 +27,8 @@ class QuizzFragmentConcept : Fragment(), View.OnClickListener {
     private lateinit var listCards: List<FlashCard>
     var card: FlashCard? = null
 
-    private var callback: OnButtonListener? = null //instancia de la interface, este es asignadoa al boton
+    private var callback: OnButtonListener? =
+        null //instancia de la interface, este es asignadoa al boton
 
     private lateinit var btnDef1: Button
     private lateinit var btnDef2: Button
@@ -49,7 +51,8 @@ class QuizzFragmentConcept : Fragment(), View.OnClickListener {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_quizz_concept, container, false)
         Log.i("answers", "")
-        val answersList = getAnswers(card!!, listCards)//obtener las respuestas para setear en los botones
+        val answersList =
+            getAnswers(card!!, listCards)//obtener las respuestas para setear en los botones
 
         btnDef1 = view.findViewById(R.id.btnDefinition1)
         btnDef2 = view.findViewById(R.id.btnDefinition2)
@@ -67,14 +70,69 @@ class QuizzFragmentConcept : Fragment(), View.OnClickListener {
 
         //comprobar si la respuesta es correcta
         btnDef1.setOnClickListener {
-            if (btnDef1.text.toString().equals(card?.definition, true)) { //aqui se compara el valor del texto del boton contra el del objeto card para saber si es la respuesta correcta
-                Log.i("QuizzFragmentConcept", "DefinicionCorrecta")
+            if (btnDef1.text.toString()
+                    .equals(card?.definition, true)
+            ) { //aqui se compara el valor del texto del boton contra el del objeto card para saber si es la respuesta correcta
+                Log.i("QuizzFragmentConcept", "DefinicionCorrecta ${card?.definition}")
+                //btnDef1.setBackgroundColor(resources.getColor(R.color.green, null))
+                colorizeCorrect(btnDef1)
+            } else {
+                Log.i("QuizzFragmentConcept", "Incorrecta")
+                colorizeIncorrect(btnDef1)
             }
-            callback?.onButtonClicked()
+
+            btnDef1.postDelayed({
+                btnDef1.setBackgroundColor(resources.getColor(R.color.purple_500, null))
+                callback?.onButtonClicked()
+            }, 1000)
+        }
+
+        btnDef2.setOnClickListener {
+            if (btnDef2.text.toString()
+                    .equals(card?.definition, true)
+            ) { //aqui se compara el valor del texto del boton contra el del objeto card para saber si es la respuesta correcta
+                Log.i("QuizzFragmentConcept", "DefinicionCorrecta ${card?.definition}")
+                //btnDef1.setBackgroundColor(resources.getColor(R.color.green, null))
+                colorizeCorrect(btnDef2)
+            } else {
+                Log.i("QuizzFragmentConcept", "Incorrecta")
+                colorizeIncorrect(btnDef2)
+            }
+
+            btnDef2.postDelayed({
+                btnDef2.setBackgroundColor(resources.getColor(R.color.purple_500, null))
+                callback?.onButtonClicked()
+            }, 1000)
+        }
+
+        btnDef3.setOnClickListener {
+            if (btnDef3.text.toString()
+                    .equals(card?.definition, true)
+            ) { //aqui se compara el valor del texto del boton contra el del objeto card para saber si es la respuesta correcta
+                Log.i("QuizzFragmentConcept", "DefinicionCorrecta ${card?.definition}")
+                //btnDef1.setBackgroundColor(resources.getColor(R.color.green, null))
+                colorizeCorrect(btnDef3)
+            } else {
+                Log.i("QuizzFragmentConcept", "Incorrecta")
+                colorizeIncorrect(btnDef3)
+            }
+
+            btnDef3.postDelayed({
+                btnDef3.setBackgroundColor(resources.getColor(R.color.purple_500, null))
+                callback?.onButtonClicked()
+            }, 1000)
         }
 
 
         return view
+    }
+
+    private fun colorizeIncorrect(button: Button) {
+        button.setBackgroundColor(resources.getColor(R.color.red, null))
+    }
+
+    private fun colorizeCorrect(button: Button) {
+        button.setBackgroundColor(resources.getColor(R.color.green, null))
     }
 
     companion object {
@@ -122,7 +180,7 @@ class QuizzFragmentConcept : Fragment(), View.OnClickListener {
     }
 
     //interface para que el activity controle el onClic y pueda crear fragments
-    interface OnButtonListener{
+    interface OnButtonListener {
         fun onButtonClicked()
     }
 
