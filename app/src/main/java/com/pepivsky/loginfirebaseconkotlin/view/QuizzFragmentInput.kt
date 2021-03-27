@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
 import com.pepivsky.loginfirebaseconkotlin.R
+import com.pepivsky.loginfirebaseconkotlin.model.Collections
 import com.pepivsky.loginfirebaseconkotlin.model.FlashCard
 
 // TODO: Rename parameter arguments, choose names that match
@@ -83,6 +84,7 @@ class QuizzFragmentInput : Fragment(), View.OnClickListener {
 
     private fun colorizeCorrect(button: Button) {
         button.setBackgroundColor(resources.getColor(R.color.green, null))
+        Collections.counter++
     }
 
     companion object {

@@ -56,6 +56,7 @@ class HomeFragment : Fragment() {
 
         rvCollections = view.findViewById(R.id.rvCollections)
         //edtBuscar = view.findViewById(R.id.edtSearch)
+        Collections.counter = 0
 
 
 

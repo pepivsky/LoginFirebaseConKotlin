@@ -1,5 +1,6 @@
 package com.pepivsky.loginfirebaseconkotlin.view
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -73,6 +74,7 @@ class QuizzActivity : AppCompatActivity(),  CardFragment.OnButtonListener, Quizz
     private fun initProgressBar() {
         progressBar = findViewById(R.id.pbQuizz)
         progressBar.max = ((list.size * 4) - 1).toFloat() //establecer el maximo valor del progressBar
+        Collections.total = list.size * 3
     }
 
     fun sacarTarjeta(): FlashCard {
@@ -202,10 +204,11 @@ class QuizzActivity : AppCompatActivity(),  CardFragment.OnButtonListener, Quizz
                         newFragmentInput()
                         progressBar.progress++
                     } else {
-                        Toast.makeText(this, "No hay mas tarjetas", Toast.LENGTH_LONG).show()
+                        //Toast.makeText(this, "No hay mas tarjetas", Toast.LENGTH_LONG).show()
                         Log.i("lista final", "$list")
                         Log.i("lista normal", "$cardsList")
-                        //Log.i("lista test", "$testFragmentList")
+                        val intent = Intent(this, ResultActivity::class.java)
+                        startActivity(intent)
                     }
 
                 }
