@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -23,17 +24,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.pepivsky.loginfirebaseconkotlin.R
+import com.pepivsky.loginfirebaseconkotlin.databinding.ActivityAuthBinding
 import com.pepivsky.loginfirebaseconkotlin.model.Collection
 import com.pepivsky.loginfirebaseconkotlin.model.User
 
 class AuthActivity : AppCompatActivity() {
-    private lateinit var btnRegistro: Button
-    private lateinit var btnLogin: Button
-    private lateinit var btnGooogleSign: Button
-    private lateinit var edtEmal: EditText
-    private lateinit var edtPassword: EditText
-    private lateinit var authLayout: ConstraintLayout
-    private lateinit var btnFacebookSign: Button
+    val TAG = "AUTH_ACTIVITY"
+
+    lateinit var binding: ActivityAuthBinding
 
     private val  GOOGLE_SIGN_IN = 100 //constante para google
     private val callbackManager = CallbackManager.Factory.create()
@@ -41,15 +39,8 @@ class AuthActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_auth)
-
-        btnRegistro = findViewById(R.id.btnRegistro)
-        btnLogin = findViewById(R.id.btnLogin)
-        edtEmal = findViewById(R.id.edtEmail)
-        edtPassword = findViewById(R.id.edtPassword)
-        authLayout = findViewById(R.id.authLayout)
-        btnGooogleSign = findViewById(R.id.btnGoogleSign)
-        btnFacebookSign = findViewById(R.id.btnFacebookSign)
+        binding = ActivityAuthBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         //setup login
         setup()
@@ -60,7 +51,7 @@ class AuthActivity : AppCompatActivity() {
     //hace visible la pantalla cada que se muestra nuevamente
     override fun onStart() {
         super.onStart()
-        authLayout.visibility = View.VISIBLE
+        binding.authLayout.visibility = View.VISIBLE
     }
 
     private fun session() { //recuperar la sesion del usuario si es que ya se ha logueado anteriormente
@@ -70,7 +61,7 @@ class AuthActivity : AppCompatActivity() {
 
         if (email != null && provider != null) {
             //ocultar el layout si existe una sesion
-            authLayout.visibility = View.INVISIBLE
+            binding.authLayout.visibility = View.INVISIBLE
             showHome(email, ProviderType.valueOf(provider))
         }
 
@@ -82,13 +73,13 @@ class AuthActivity : AppCompatActivity() {
         title = "Autenticacion"
 
         //registrar usuario
-        btnRegistro.setOnClickListener {
+        binding.btnRegistro.setOnClickListener {
             //comprobar que se han introducido email y password
-            if (edtEmal.text.isNotEmpty() && edtPassword.text.isNotEmpty()) {
+            if (binding.edtEmail.text.isNotEmpty() && binding.edtPassword.text.isNotEmpty()) {
                 //crear el usuario con email y password en Firebase  y le pasamos el email y password
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(
-                    edtEmal.text.toString(),
-                    edtPassword.text.toString()
+                    binding.edtEmail.text.toString(),
+                    binding.edtPassword.text.toString()
                 ).addOnCompleteListener {
 
                     if (it.isSuccessful) {//comprobar que la operacion fue exitosa, si es asi vamos al home
@@ -106,13 +97,13 @@ class AuthActivity : AppCompatActivity() {
 
 
         //Loguear usuario
-        btnLogin.setOnClickListener {
+        binding.btnLogin.setOnClickListener {
             //comprobar que se han introducido email y password
-            if (edtEmal.text.isNotEmpty() && edtPassword.text.isNotEmpty()) {
+            if (binding.edtEmail.text.isNotEmpty() && binding.edtPassword.text.isNotEmpty()) {
                 //logear el usuario con email y password en Firebase  y le pasamos el email y password
                 FirebaseAuth.getInstance().signInWithEmailAndPassword( //sign in
-                    edtEmal.text.toString(),
-                    edtPassword.text.toString()
+                    binding.edtEmail.text.toString(),
+                    binding.edtPassword.text.toString()
                 ).addOnCompleteListener {
 
                     if (it.isSuccessful) {//comprobar que la operacion fue exitosa, si es asi vamos al home
@@ -127,7 +118,7 @@ class AuthActivity : AppCompatActivity() {
         }
 
         //logueo con cuenta de google
-        btnGooogleSign.setOnClickListener {
+        binding.btnGoogleSign.setOnClickListener {
             //configuracion de la autenticacion
             val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -142,7 +133,7 @@ class AuthActivity : AppCompatActivity() {
         }
 
         //logueo con la cuenta de facebook
-        btnFacebookSign.setOnClickListener {
+        binding.btnFacebookSign.setOnClickListener {
             LoginManager.getInstance().logInWithReadPermissions(this, listOf("email")) //le pasamos una ista con un activity y una lista de permisos o de los datos que queremos traer (por defecto siempre se recibe el nombre y la foto)
             //loginManager: clase de la libnreria de Facebook
             LoginManager.getInstance().registerCallback(callbackManager,
