@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.commit
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
 import com.pepivsky.loginfirebaseconkotlin.model.Collections
 import com.pepivsky.loginfirebaseconkotlin.model.FlashCard
@@ -34,20 +35,22 @@ class QuizzActivity : AppCompatActivity(),  CardFragment.OnButtonListener, Quizz
         supportActionBar?.hide(); // ocultar el toolbar
 
         //obtener el extra con el index
-        var bundle: Bundle? = intent.extras
-        var index = bundle!!.getInt("pos") // 1
-        Log.i("quizzActivity", "$index     ${Collections.collectionsList[index]}")
+        intent.extras.let { bundle ->
+            val index = bundle?.getInt("pos") // 1
+            Log.i("quizzActivity", "$index     ${Collections.collectionsList[index!!]}")
 
-        //obteniendo el arrayList
-        list = bundle.getParcelableArrayList<FlashCard>("lsitaTarjetas")!!
+            //obteniendo el arrayList
+            list = bundle.getParcelableArrayList<FlashCard>("lsitaTarjetas") as List<FlashCard>
 
-        cardsList = list.toMutableList()
-        listForQuizzFragmentConcept = list.toMutableList()
-        listoForQuizzFragmentDefinition = list.toMutableList()
-        listoForQuizzFragmentInput = list.toMutableList()
+            cardsList = list.toMutableList()
+            listForQuizzFragmentConcept = list.toMutableList()
+            listoForQuizzFragmentDefinition = list.toMutableList()
+            listoForQuizzFragmentInput = list.toMutableList()
+            Log.i("lista recibida", "$cardsList")
 
-        Log.i("lista recibida", "$cardsList")
-
+            newFragmentCard() //agregar el primer fragment
+            initUI()
+        }
         //Collections.collectionsList[message]
 
         /*val collection = Collections.collectionsList[index]
@@ -55,11 +58,6 @@ class QuizzActivity : AppCompatActivity(),  CardFragment.OnButtonListener, Quizz
         Log.i("testeandoLista", "${cardsList}")*/
 
         //private val cardsList = mutableListOf<Card>
-
-        newFragmentCard() //agregar el primer fragment
-        initUI()
-
-
     }
 
     private fun initUI() {
@@ -77,113 +75,91 @@ class QuizzActivity : AppCompatActivity(),  CardFragment.OnButtonListener, Quizz
         Collections.total = list.size * 3
     }
 
-    fun sacarTarjeta(): FlashCard {
-        val rand =
-            (0 until cardsList.size).random() //obtiendo un numero entre 0 y el tamano de la lista
-        val card = cardsList[rand] //extrayendo un valor de la lista
+    private fun removeRandomCard(cardList: MutableList<FlashCard>): FlashCard {
+        //val rand = (0 until cardsList.size).random() //obtiendo un numero entre 0 y el tamano de la lista
+        val randomCard = cardList.random() //extrayendo un valor de la lista
         //eliminar el item
-        cardsList.removeAt(rand) //quitando la palabra de la lista
-
-        return card
+        cardList.remove(randomCard) //quitando la palabra de la lista
+        return randomCard
     }
 
-    fun newFragmentCard() { //funcion que crea fragments
-        val card = sacarTarjeta()
+    private fun newFragmentCard() { //funcion que crea fragments
+        val card = removeRandomCard(cardsList)
         val fragment = CardFragment.newInstance(card) //pasandole el string que necesita el fragment
 
         //seteando el onButtonListener
         fragment.setOnButtonListener(this)
 
-        //fragment.setOnbuttonListener(this)
-        supportFragmentManager //TODO implemetar animaciones
-            .beginTransaction()
-            .setCustomAnimations(R.anim.slide_out_left, R.anim.slide_in_right)
-            .replace(R.id.container, fragment)//conteneror y fragment por el cual se reemplaza
-            .commit()
-
+        supportFragmentManager.commit {
+            setCustomAnimations(
+                R.anim.slide_in,
+                R.anim.fade_out,
+                R.anim.fade_in,
+                R.anim.slide_out
+            )
+            replace(R.id.container, fragment)
+            addToBackStack(null)
+        }
     }
 
     //funciones para crear fragmentConcept
-    fun newFragmentConcept() {
-        val card = sacarCard()
+    private fun newFragmentConcept() {
+        val card = removeRandomCard(listForQuizzFragmentConcept)
 
         val fragmentConcept = QuizzFragmentConcept.newInstance(list, card)
 
         fragmentConcept.setOnButtonListener(this)
 
-        supportFragmentManager //TODO implemetar animaciones
-            .beginTransaction()
-            .setCustomAnimations(R.anim.slide_out_left, R.anim.slide_in_right)
-            .replace(
-                R.id.container,
-                fragmentConcept
-            )//conteneror y fragment por el cual se reemplaza
-            .commit()
+        supportFragmentManager.commit {
+            setCustomAnimations(
+                R.anim.slide_in,
+                R.anim.fade_out,
+                R.anim.fade_in,
+                R.anim.slide_out
+            )
+            replace(R.id.container, fragmentConcept)
+            addToBackStack(null)
+        }
     }
 
-    fun sacarCard(): FlashCard {
-        val rand =
-            (0 until listForQuizzFragmentConcept.size).random() //obtiendo un numero entre 0 y el tamano de la lista
-        val card = listForQuizzFragmentConcept[rand] //extrayendo un valor de la lista
-        //eliminar el item
-        listForQuizzFragmentConcept.removeAt(rand) //quitando la palabra de la lista
-
-        return card
-    }
 
     //funciones para crear fragmentDefinition
-    fun newFragmentDefinition() {
-        val card = sacarCardDef()
+    private fun newFragmentDefinition() {
+        val card = removeRandomCard(listoForQuizzFragmentDefinition)
 
-        val fragmentConcept = QuizzFragmentDefinition.newInstance(list, card)
+        val fragmentDefinition = QuizzFragmentDefinition.newInstance(list, card)
 
-        fragmentConcept.setOnButtonListener(this)
+        fragmentDefinition.setOnButtonListener(this)
 
-        supportFragmentManager //TODO implemetar animaciones
-            .beginTransaction()
-            .setCustomAnimations(R.anim.slide_out_left, R.anim.slide_in_right)
-            .replace(
-                R.id.container,
-                fragmentConcept
-            )//conteneror y fragment por el cual se reemplaza
-            .commit()
+        supportFragmentManager.commit {
+            setCustomAnimations(
+                R.anim.slide_in,
+                R.anim.fade_out,
+                R.anim.fade_in,
+                R.anim.slide_out
+            )
+            replace(R.id.container, fragmentDefinition)
+            addToBackStack(null)
+        }
     }
 
-    fun sacarCardDef(): FlashCard {
-        val rand =
-            (0 until listoForQuizzFragmentDefinition.size).random() //obtiendo un numero entre 0 y el tamano de la lista
-        val card = listoForQuizzFragmentDefinition[rand] //extrayendo un valor de la lista
-        //eliminar el item
-        listoForQuizzFragmentDefinition.removeAt(rand) //quitando la palabra de la lista
-
-        return card
-    }
-
-    //frgament input
-    fun sacarTarjeta1(): FlashCard {
-        val rand =
-            (0 until listoForQuizzFragmentInput.size).random() //obtiendo un numero entre 0 y el tamano de la lista
-        val card = listoForQuizzFragmentInput[rand] //extrayendo un valor de la lista
-        //eliminar el item
-        listoForQuizzFragmentInput.removeAt(rand) //quitando la palabra de la lista
-
-        return card
-    }
-
-    fun newFragmentInput() { //funcion que crea fragments
-        val card = sacarTarjeta1()
-        val fragment = QuizzFragmentInput.newInstance(card) //pasandole el string que necesita el fragment
+    private fun newFragmentInput() { //funcion que crea fragments
+        val card = removeRandomCard(listoForQuizzFragmentInput)
+        val fragmentInput = QuizzFragmentInput.newInstance(card) //pasandole el string que necesita el fragment
 
         //seteando el onButtonListener
-        fragment.setOnButtonListener(this)
+        fragmentInput.setOnButtonListener(this)
 
-        //fragment.setOnbuttonListener(this)
-        supportFragmentManager //TODO implemetar animaciones
-            .beginTransaction()
-            .setCustomAnimations(R.anim.slide_out_left, R.anim.slide_in_right)
-            .replace(R.id.container, fragment)//conteneror y fragment por el cual se reemplaza
-            .commit()
-
+        supportFragmentManager.commit {
+            setCustomAnimations(
+                R.anim.slide_in,
+                R.anim.fade_out,
+                R.anim.fade_in,
+                R.anim.slide_out
+            )
+            replace(R.id.container, fragmentInput)
+            addToBackStack(null)
+        }
     }
 
     //Al darle clic al boton, se lanza este metodo que crea nuevos Fragments
@@ -210,7 +186,6 @@ class QuizzActivity : AppCompatActivity(),  CardFragment.OnButtonListener, Quizz
                         val intent = Intent(this, ResultActivity::class.java)
                         startActivity(intent)
                     }
-
                 }
             }
         }

@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/layout/activity_auth.xml" value="0.24270833333333333" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.24270833333333333" />
+        <entry key="app/src/main/res/layout/activity_quizz.xml" value="0.24270833333333333" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.24270833333333333" />
         <entry key="app/src/main/res/layout/item_collection_card.xml" value="0.24270833333333333" />
       </map>
