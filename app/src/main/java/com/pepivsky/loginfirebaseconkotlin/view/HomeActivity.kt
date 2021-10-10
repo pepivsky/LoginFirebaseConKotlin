@@ -1,6 +1,7 @@
 package com.pepivsky.loginfirebaseconkotlin.view
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -28,22 +29,24 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var bottomNavigationView: BottomNavigationView
 
-    private lateinit var tvEmail: TextView
+    /*private lateinit var tvEmail: TextView
     private lateinit var tvProvider: TextView
     private lateinit var btnLogOut: Button
 
 
-    private lateinit var btnGuardar: Button
+    private lateinit var btnGuardar: Button*/
 
-    private lateinit var provider: String
-    lateinit var email: String
+    private var provider: String? = ""
+    private var email: String? = ""
 
 
-    private val db = FirebaseFirestore.getInstance()
+    //private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        initUI()
 
         //tvEmail = findViewById(R.id.tvEmail)
         //tvProvider = findViewById(R.id.tvProveedor)
@@ -51,31 +54,26 @@ class HomeActivity : AppCompatActivity() {
         //btnGuardar = findViewById(R.id.btnGuardar)
 
         //obtener datos del bundle
-        val bundle = intent.extras
-        email = bundle?.getString("email") ?: "email vacio"
-        provider = bundle?.getString("provider") ?: "provider"
-
-
+        intent.extras.let { bundle ->
+            email = bundle?.getString("email")
+            provider = bundle?.getString("provider")
+        }
 
         Log.i("bundle", "email $email provider $provider")
-
-        //setup
-        setup(email ?: "vacio", provider ?: "vacio") //pasarle los datos
         saveUserSession(email, provider) //guardar la sesion del usuario
 
         Log.i("Entrando Oncreate", "Entrando en oncreate")
-
-
-
        /* if (provider != null && email != null) {//crea el usuario en firestore
             createUserInFirestore(email, provider)
             Log.i("OnCreate" ,"creando usuario")
         }*/
-
-
     }
 
-    private fun setup(email: String, provider: String) {
+    private fun initUI() {
+        setUpNavigation()
+        title = "Inicio"
+    }
+    /*private fun setup(email: String, provider: String) {
         setUpNavigation()
         title = "Inicio"
         //seteando los valores
@@ -85,7 +83,7 @@ class HomeActivity : AppCompatActivity() {
 
 
         //logout
-        /*btnLogOut.setOnClickListener {
+        *//*btnLogOut.setOnClickListener {
             //borrado de datos
             val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit() //aceso al fichero de modo privado
             prefs.clear()
@@ -98,9 +96,9 @@ class HomeActivity : AppCompatActivity() {
 
             FirebaseAuth.getInstance().signOut() //hacer logout de firebase
             onBackPressed() //volver a la pantalla anterior
-        }*/
+        }*//*
 
-        /*btnGuardar.setOnClickListener {
+        *//*btnGuardar.setOnClickListener {
             //crear objeto dummy
             val collection1 = Collection("palabras nuevas",
                 mutableListOf(
@@ -119,9 +117,9 @@ class HomeActivity : AppCompatActivity() {
             //createUserInFirestore(email, provider) //crea el usuario en firestore, si existe, reemplaza el contenido
             addCollectionToBD(collection1, email) //agrega una nueva collecion a la lista de colecciones del usuario
 
-        }*/
+        }*//*
 
-    }
+    }*/
 
     private fun saveUserSession(email: String?, provider: String?) {
         //guardar la sesion del usuario para que una vez que se logee no vuelva a pedir los datos de autenticacion
@@ -155,9 +153,13 @@ class HomeActivity : AppCompatActivity() {
                 }
 
                 FirebaseAuth.getInstance().signOut() //hacer logout de firebase
-                onBackPressed() //volver a la pantalla anterior
+                //onBackPressed() //volver a la pantalla anterior
                 //limpiar la lista al cerrar sesion
                 Collections.collectionsList.clear()
+                // ir al activity Auth para iniciar con otra cuenta
+                val intent = Intent(this, AuthActivity::class.java)
+                startActivity(intent)
+                this.finish() // finalizar la activty actual
                 true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -174,10 +176,10 @@ class HomeActivity : AppCompatActivity() {
         )
     }
 
-    private fun addCollectionToBD(collection: Collection, email: String) {
+    /*private fun addCollectionToBD(collection: Collection, email: String) {
         val refUser = db.collection("users").document(email)
         refUser.update("collections", FieldValue.arrayUnion(collection))
-    }
+    }*/
 
     //evita que se pueda regresar al login
     override fun onBackPressed() {
