@@ -98,7 +98,6 @@ class QuizzActivity : AppCompatActivity(),  CardFragment.OnButtonListener, Quizz
                 R.anim.slide_out
             )
             replace(R.id.container, fragment)
-            addToBackStack(null)
         }
     }
 
@@ -118,7 +117,6 @@ class QuizzActivity : AppCompatActivity(),  CardFragment.OnButtonListener, Quizz
                 R.anim.slide_out
             )
             replace(R.id.container, fragmentConcept)
-            addToBackStack(null)
         }
     }
 
@@ -139,7 +137,6 @@ class QuizzActivity : AppCompatActivity(),  CardFragment.OnButtonListener, Quizz
                 R.anim.slide_out
             )
             replace(R.id.container, fragmentDefinition)
-            addToBackStack(null)
         }
     }
 
@@ -158,7 +155,6 @@ class QuizzActivity : AppCompatActivity(),  CardFragment.OnButtonListener, Quizz
                 R.anim.slide_out
             )
             replace(R.id.container, fragmentInput)
-            addToBackStack(null)
         }
     }
 
