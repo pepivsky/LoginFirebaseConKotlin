@@ -11,39 +11,25 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import com.pepivsky.loginfirebaseconkotlin.R
+import com.pepivsky.loginfirebaseconkotlin.databinding.FragmentCardBinding
 import com.pepivsky.loginfirebaseconkotlin.model.FlashCard
 
-private const val ARG_STRING = "string"
 private const val ARG_CARD = "card"
 
-class CardFragment : Fragment(), View.OnClickListener {
+class CardFragment : Fragment(R.layout.fragment_card), View.OnClickListener {
 
-    private var string: String? = null
-
+    lateinit var binding: FragmentCardBinding
     var card: FlashCard? = null
-
-    //views
-    private lateinit var tvConcept: TextView
-    private lateinit var tvDefiniton: TextView
-
-    private lateinit var btnSiguiente: Button
-
     lateinit var front_anim: AnimatorSet
     lateinit var back_anim: AnimatorSet
-
-    lateinit var cardFront: CardView
-    lateinit var cardBack: CardView
-
     var isFront = true
-
     //callback
     private var callback: OnButtonListener? = null //instancia de la interface, este es asignadoa al boton
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        //arguments?.getString(ARG_STRING) //es lo mismo que usando let
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = FragmentCardBinding.bind(view)
 
         arguments?.let {
             //string = it.getString(ARG_STRING)//obteniendo el parametro por su clave y guardandolo en la variable String
@@ -51,37 +37,21 @@ class CardFragment : Fragment(), View.OnClickListener {
             card = it.getParcelable(ARG_CARD)
 
         }
-    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_card, container, false)
 
-        tvConcept = view.findViewById(R.id.tvConceptCard)
-        tvDefiniton = view.findViewById(R.id.tvDefinitionCard)
-        btnSiguiente = view.findViewById(R.id.btnSiguiente)
-
-        cardFront = view.findViewById(R.id.cardFront)
-        cardBack = view.findViewById(R.id.cardBack)
-
-        btnSiguiente.setOnClickListener {
+        binding.btnSiguiente.setOnClickListener {
             callback?.onButtonClicked() //se llama el metodo del callback perviamente seteado con funcionalidad desde el main
         }
 
         //seteando
-        tvConcept.text = card?.concept
+        binding.tvConceptCard.text = card?.concept
 
-        tvDefiniton.text = card?.definition
+        binding.tvDefinitionCard.text = card?.definition
 
         prepareFlipCard()//nuevaLinea, necesaria para lanimacion al darle tap a un card
 
-
-        return view
-
     }
+
 
     companion object {
 
@@ -113,11 +83,10 @@ class CardFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         //callback
     }
-
     fun prepareFlipCard() {
-        val scale = context?.resources?.displayMetrics?.density //obteniendo la escala
-        cardFront.cameraDistance = 8000 * scale!! //asignando distancia de la camara
-        cardBack.cameraDistance = 8000 * scale
+        val scale = requireContext().resources.displayMetrics.density //obteniendo la escala
+        binding.cardFront.cameraDistance = 8000 * scale // asignando distancia de la camara
+        binding.cardBack.cameraDistance = 8000 * scale
 
         //settear los animator
         front_anim = AnimatorInflater.loadAnimator(context, R.animator.front_animator) as AnimatorSet
@@ -125,13 +94,13 @@ class CardFragment : Fragment(), View.OnClickListener {
 
         //girar card al darle tap (hay que quitarle la elevacion para que se vea bien)
         //girar card al darle tap (hay que quitarle la elevacion para que se vea bien)
-        cardFront.setOnClickListener {
+        binding.cardFront.setOnClickListener {
             if (isFront) {
 
                 if (!front_anim.isRunning && !back_anim.isRunning ) {
                     //front_anim.
-                    front_anim.setTarget(cardFront)
-                    back_anim.setTarget(cardBack)
+                    front_anim.setTarget(binding.cardFront)
+                    back_anim.setTarget(binding.cardBack)
 
                     front_anim.start()
                     back_anim.start()
@@ -141,8 +110,8 @@ class CardFragment : Fragment(), View.OnClickListener {
             } else {
 
                 if (!front_anim.isRunning && !back_anim.isRunning ) {
-                    front_anim.setTarget(cardBack)
-                    back_anim.setTarget(cardFront)
+                    front_anim.setTarget(binding.cardBack)
+                    back_anim.setTarget(binding.cardFront)
 
 
                     back_anim.start()
@@ -154,13 +123,13 @@ class CardFragment : Fragment(), View.OnClickListener {
             }
         }
 
-        cardBack.setOnClickListener {
+        binding.cardBack.setOnClickListener {
             if (isFront) {
 
 
                 if (!front_anim.isRunning && !back_anim.isRunning ) {
-                    front_anim.setTarget(cardFront)
-                    back_anim.setTarget(cardBack)
+                    front_anim.setTarget(binding.cardFront)
+                    back_anim.setTarget(binding.cardBack)
 
                     back_anim.start()
                     front_anim.start()
@@ -171,8 +140,8 @@ class CardFragment : Fragment(), View.OnClickListener {
             } else {
 
                 if (!front_anim.isRunning && !back_anim.isRunning ) {
-                    front_anim.setTarget(cardBack)
-                    back_anim.setTarget(cardFront)
+                    front_anim.setTarget(binding.cardBack)
+                    back_anim.setTarget(binding.cardFront)
 
                     back_anim.start()
                     front_anim.start()
