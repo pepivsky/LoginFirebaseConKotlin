@@ -3,125 +3,89 @@ package com.pepivsky.loginfirebaseconkotlin.view
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import com.pepivsky.loginfirebaseconkotlin.R
+import com.pepivsky.loginfirebaseconkotlin.databinding.FragmentQuizzDefinitionBinding
 import com.pepivsky.loginfirebaseconkotlin.model.Collections
 import com.pepivsky.loginfirebaseconkotlin.model.FlashCard
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_CARD = "card"
 private const val ARG_CARDSLIST = "cards"
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [QuizzFragmentDefinition.newInstance] factory method to
- * create an instance of this fragment.
- */
-class QuizzFragmentDefinition : Fragment(), View.OnClickListener {
-
+class QuizzFragmentDefinition : Fragment(R.layout.fragment_quizz_definition), View.OnClickListener {
+    
+    lateinit var binding: FragmentQuizzDefinitionBinding
     private lateinit var listCards: List<FlashCard>
     var card: FlashCard? = null
+    private var callback: OnButtonListener? = null //instancia de la interface, este es asignadoa al boton
 
-    private var callback: OnButtonListener? =
-        null //instancia de la interface, este es asignadoa al boton
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = FragmentQuizzDefinitionBinding.bind(view)
 
-    private lateinit var btnConcept1: Button
-    private lateinit var btnConcept2: Button
-    private lateinit var btnConcept3: Button
-
-    private lateinit var tvDefinition: TextView
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         arguments?.let {
             listCards = it.getParcelableArrayList(ARG_CARDSLIST)!!
             card = it.getParcelable(ARG_CARD)
         }
-    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_quizz_definition, container, false)
-
-        val answersList =
-            getAnswers(card!!, listCards)//obtener las respuestas para setear en los botones
-
-        // Inflate the layout for this fragment
-        btnConcept1 = view.findViewById(R.id.btnConcept1)
-        btnConcept2 = view.findViewById(R.id.btnConcept2)
-        btnConcept3 = view.findViewById(R.id.btnConcept3)
-
-        tvDefinition = view.findViewById(R.id.tvDefinitionfq)
-
+        val answersList = getAnswers(card!!, listCards)//obtener las respuestas para setear en los botones
 
         //seteando valores
-        tvDefinition.text = card?.definition
+        binding.tvDefinitionfq.text = card?.definition
 
         //botones
-        btnConcept1.text = answersList?.get(0)?.concept
-        btnConcept2.text = answersList?.get(1)?.concept
-        btnConcept3.text = answersList?.get(2)?.concept
+        binding.btnConcept1.text = answersList?.get(0)?.concept
+        binding.btnConcept2.text = answersList?.get(1)?.concept
+        binding.btnConcept3.text = answersList?.get(2)?.concept
 
-        btnConcept1.setOnClickListener {
-            if (btnConcept1.text.toString()
+        binding.btnConcept1.setOnClickListener {
+            if (binding.btnConcept1.text.toString().equals(card?.concept, true)
+            ) { //aqui se compara el valor del texto del boton contra el del objeto card para saber si es la respuesta correcta
+                Log.i("QuizzFragmentConcept", "DefinicionCorrecta ${card?.concept}")
+                //btnDef1.setBackgroundColor(resources.getColor(R.color.green, null))
+                colorizeCorrect(binding.btnConcept1)
+            } else {
+                Log.i("QuizzFragmentConcept", "Incorrecta")
+                colorizeIncorrect(binding.btnConcept1)
+            }
+            binding.btnConcept1.postDelayed({
+                binding.btnConcept1.setBackgroundColor(resources.getColor(R.color.purple_500, null))
+                callback?.onButtonClicked()
+            }, 1000)
+        }
+        binding.btnConcept2.setOnClickListener {
+            if (binding.btnConcept2.text.toString().equals(card?.concept, true)
+            ) { //aqui se compara el valor del texto del boton contra el del objeto card para saber si es la respuesta correcta
+                Log.i("QuizzFragmentConcept", "DefinicionCorrecta ${card?.concept}")
+                //btnDef1.setBackgroundColor(resources.getColor(R.color.green, null))
+                colorizeCorrect(binding.btnConcept2)
+            } else {
+                Log.i("QuizzFragmentConcept", "Incorrecta")
+                colorizeIncorrect(binding.btnConcept2)
+            }
+            binding.btnConcept2.postDelayed({
+                binding.btnConcept2.setBackgroundColor(resources.getColor(R.color.purple_500, null))
+                callback?.onButtonClicked()
+            }, 1000)
+        }
+        binding.btnConcept3.setOnClickListener {
+            if (binding.btnConcept3.text.toString()
                     .equals(card?.concept, true)
             ) { //aqui se compara el valor del texto del boton contra el del objeto card para saber si es la respuesta correcta
                 Log.i("QuizzFragmentConcept", "DefinicionCorrecta ${card?.concept}")
                 //btnDef1.setBackgroundColor(resources.getColor(R.color.green, null))
-                colorizeCorrect(btnConcept1)
+                colorizeCorrect(binding.btnConcept3)
             } else {
                 Log.i("QuizzFragmentConcept", "Incorrecta")
-                colorizeIncorrect(btnConcept1)
+                colorizeIncorrect(binding.btnConcept3)
             }
-            btnConcept1.postDelayed({
-                btnConcept1.setBackgroundColor(resources.getColor(R.color.purple_500, null))
+            binding.btnConcept3.postDelayed({
+                binding.btnConcept3.setBackgroundColor(resources.getColor(R.color.purple_500, null))
                 callback?.onButtonClicked()
             }, 1000)
         }
-        btnConcept2.setOnClickListener {
-            if (btnConcept2.text.toString()
-                    .equals(card?.concept, true)
-            ) { //aqui se compara el valor del texto del boton contra el del objeto card para saber si es la respuesta correcta
-                Log.i("QuizzFragmentConcept", "DefinicionCorrecta ${card?.concept}")
-                //btnDef1.setBackgroundColor(resources.getColor(R.color.green, null))
-                colorizeCorrect(btnConcept2)
-            } else {
-                Log.i("QuizzFragmentConcept", "Incorrecta")
-                colorizeIncorrect(btnConcept2)
-            }
-            btnConcept2.postDelayed({
-                btnConcept2.setBackgroundColor(resources.getColor(R.color.purple_500, null))
-                callback?.onButtonClicked()
-            }, 1000)
-        }
-        btnConcept3.setOnClickListener {
-            if (btnConcept3.text.toString()
-                    .equals(card?.concept, true)
-            ) { //aqui se compara el valor del texto del boton contra el del objeto card para saber si es la respuesta correcta
-                Log.i("QuizzFragmentConcept", "DefinicionCorrecta ${card?.concept}")
-                //btnDef1.setBackgroundColor(resources.getColor(R.color.green, null))
-                colorizeCorrect(btnConcept3)
-            } else {
-                Log.i("QuizzFragmentConcept", "Incorrecta")
-                colorizeIncorrect(btnConcept3)
-            }
-            btnConcept3.postDelayed({
-                btnConcept3.setBackgroundColor(resources.getColor(R.color.purple_500, null))
-                callback?.onButtonClicked()
-            }, 1000)
-        }
-
-
-        return view
+        
     }
 
     private fun colorizeIncorrect(button: Button) {
@@ -134,15 +98,6 @@ class QuizzFragmentDefinition : Fragment(), View.OnClickListener {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment QuizzFragmentConcept.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(listCards: List<FlashCard>, card: FlashCard) =
             QuizzFragmentDefinition().apply {
