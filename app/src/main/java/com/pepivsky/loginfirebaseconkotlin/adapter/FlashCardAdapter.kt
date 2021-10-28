@@ -6,14 +6,15 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import com.pepivsky.loginfirebaseconkotlin.R
+import com.pepivsky.loginfirebaseconkotlin.databinding.ItemFrontBackCardBinding
 import com.pepivsky.loginfirebaseconkotlin.model.FlashCard
 
-class FlashCardAdapter(val flashcards: MutableList<FlashCard>): RecyclerView.Adapter<FlashCardAdapter.FlashcardHolder>()  {
+class FlashCardAdapter(private val flashcards: MutableList<FlashCard>): RecyclerView.Adapter<FlashCardAdapter.FlashcardHolder>()  {
 
 
     companion object {
@@ -25,42 +26,26 @@ class FlashCardAdapter(val flashcards: MutableList<FlashCard>): RecyclerView.Ada
     }
 
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlashcardHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        return FlashcardHolder(layoutInflater.inflate(R.layout.item_front_back_card , parent, false))
+        val binding = ItemFrontBackCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return FlashcardHolder(binding)
     }
 
     override fun onBindViewHolder(holder: FlashcardHolder, position: Int) {
-        holder.render(flashcards[position])
-
-        holder.edtConcept.setText(flashcards[position].concept)
-        holder.edtDefinition.setText(flashcards[position].definition)
-
-
+        holder.render()
+        holder.binding.edtConcept.setText(flashcards[position].concept)
+        holder.binding.edtDefinition.setText(flashcards[position].definition)
     }
 
     override fun getItemCount(): Int {
         return flashcards.size
     }
 
+    class FlashcardHolder(val binding: ItemFrontBackCardBinding): RecyclerView.ViewHolder(binding.root) {
 
-    class FlashcardHolder(val view: View): RecyclerView.ViewHolder(view) {
-        lateinit var edtConcept: EditText
-        lateinit var edtDefinition: EditText
+        fun render() {
 
-
-
-
-        //lateinit var flashCard: FlashCard
-
-        fun render(flashCard: FlashCard) {
-            edtConcept = view.findViewById(R.id.edtConcept)
-            edtDefinition = view.findViewById(R.id.edtDefinition)
-
-
-
-            edtConcept.addTextChangedListener(object : TextWatcher { //Listener para setear el texto cuando sea  escrito
+            binding.edtConcept.addTextChangedListener(object : TextWatcher { //Listener para setear el texto cuando sea  escrito
                 override fun beforeTextChanged(
                     s: CharSequence?,
                     start: Int,
@@ -68,27 +53,27 @@ class FlashCardAdapter(val flashcards: MutableList<FlashCard>): RecyclerView.Ada
                     after: Int
                 ) {
                     //before
-                    edtConcept.backgroundTintList = ColorStateList.valueOf(Color.RED) //rojo cuando esta vacio
-                    edtConcept.setHintTextColor(ColorStateList.valueOf(Color.RED))
+                    binding.edtConcept.backgroundTintList = ColorStateList.valueOf(Color.RED) //rojo cuando esta vacio
+                    binding.edtConcept.setHintTextColor(ColorStateList.valueOf(Color.RED))
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    flashcardsList.get(adapterPosition).concept = edtConcept.text.toString()
+                    flashcardsList.get(adapterPosition).concept = binding.edtConcept.text.toString()
 
                 }
 
                 override fun afterTextChanged(s: Editable?) {
                     //revisar si estan llenos los editText
-                    if (edtConcept.text.isNotEmpty()) {
-                        edtConcept.backgroundTintList = ColorStateList.valueOf(Color.GRAY) //gris cuando se ha ingresado texto
-                        edtConcept.setHintTextColor(ColorStateList.valueOf(Color.GRAY))
+                    if (binding.edtConcept.text.isNotEmpty()) {
+                        binding.edtConcept.backgroundTintList = ColorStateList.valueOf(Color.GRAY) //gris cuando se ha ingresado texto
+                        binding.edtConcept.setHintTextColor(ColorStateList.valueOf(Color.GRAY))
                     }
                 }
 
             })
 
             //definicion
-            edtDefinition.addTextChangedListener(object : TextWatcher {
+            binding.edtDefinition.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
                     s: CharSequence?,
                     start: Int,
@@ -97,29 +82,23 @@ class FlashCardAdapter(val flashcards: MutableList<FlashCard>): RecyclerView.Ada
                 ) {
                     //before
                     Log.i("tag", "Test")
-                    //edtDefinition.backgroundTintMode
-                    edtDefinition.backgroundTintList = ColorStateList.valueOf(Color.RED)
-                    edtDefinition.setHintTextColor(ColorStateList.valueOf(Color.RED))
+                    //binding.edtDefinition.backgroundTintMode
+                    binding.edtDefinition.backgroundTintList = ColorStateList.valueOf(Color.RED)
+                    binding.edtDefinition.setHintTextColor(ColorStateList.valueOf(Color.RED))
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    flashcardsList.get(adapterPosition).definition = edtDefinition.text.toString()
+                    flashcardsList.get(adapterPosition).definition = binding.edtDefinition.text.toString()
                 }
 
                 override fun afterTextChanged(s: Editable?) {
-                    if (edtDefinition.text.isNotEmpty()) {
-                        edtDefinition.backgroundTintList = ColorStateList.valueOf(Color.GRAY)
-                        edtDefinition.setHintTextColor(ColorStateList.valueOf(Color.GRAY))
+                    if (binding.edtDefinition.text.isNotEmpty()) {
+                        binding.edtDefinition.backgroundTintList = ColorStateList.valueOf(Color.GRAY)
+                        binding.edtDefinition.setHintTextColor(ColorStateList.valueOf(Color.GRAY))
                     }
                 }
 
             })
-
-
-
-            //seteando atributos
-            //flashCard.concept = edtConcept.text.toString()
-            //flashCard.definition = edtConcept.text.toString()
         }
 
 
