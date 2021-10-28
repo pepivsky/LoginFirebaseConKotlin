@@ -17,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.pepivsky.loginfirebaseconkotlin.model.Collection
 
 import com.pepivsky.loginfirebaseconkotlin.R
+import com.pepivsky.loginfirebaseconkotlin.databinding.ItemCollectionCardBinding
 import com.pepivsky.loginfirebaseconkotlin.model.Collections
 import com.pepivsky.loginfirebaseconkotlin.view.CreateCollectionFragment
 import com.pepivsky.loginfirebaseconkotlin.view.QuizzActivity
@@ -27,23 +28,16 @@ class CollectionAdapter(val collections: List<Collection>, val email: String): R
     private val db = FirebaseFirestore.getInstance()
 
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectionHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        return CollectionHolder(
-            layoutInflater.inflate(
-                R.layout.item_collection_card,
-                parent,
-                false
-            )
-        )
+        val binding = ItemCollectionCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return CollectionHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CollectionHolder, position: Int) {
         val collection = holder.render(collections[position])
         val activity = holder.itemView.context as Activity
         //todo pasar el objeto al darle tap
-        holder.view.setOnClickListener {
+        holder.binding.itemCollectionCard.setOnClickListener {
             val intent = Intent(activity, QuizzActivity::class.java )
             intent.putExtra("position", position)
             intent.putParcelableArrayListExtra("lsitaTarjetas", ArrayList(collections[position].listCard))
@@ -52,7 +46,8 @@ class CollectionAdapter(val collections: List<Collection>, val email: String): R
             activity.startActivity(intent)
 
         }
-        holder.iBDeleteCollection.setOnClickListener {
+
+        holder.binding.btnDeleteCollection.setOnClickListener {
             val builder = AlertDialog.Builder(activity)
             builder.setTitle("¿Estás seguro que deseas eliminar esta coleccion?")
             builder.setMessage("Se eliminara definitivamente")
@@ -71,26 +66,15 @@ class CollectionAdapter(val collections: List<Collection>, val email: String): R
         }
 
 
+
+
     }
 
-    override fun getItemCount(): Int {
-        return collections.size
-    }
+    override fun getItemCount() = collections.size
 
-    class CollectionHolder(val view: View): RecyclerView.ViewHolder(view) {
-        lateinit var tvTitle: TextView
-
-        lateinit var itemCard: CardView
-        lateinit var iBDeleteCollection: ImageButton
-
-
+    class CollectionHolder(val binding: ItemCollectionCardBinding): RecyclerView.ViewHolder(binding.root) {
         fun render(collection: Collection) {
-            tvTitle = view.findViewById(R.id.tvTittle)
-            //itemCard = view.findViewById(R.id.item_collection_card)
-            iBDeleteCollection = view.findViewById(R.id.btnDeleteCollection)
-
-            tvTitle.text = collection.tittle
-
+            binding.tvTittle.text = collection.tittle
         }
     }
 }
