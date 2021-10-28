@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -69,11 +70,10 @@ class CreateCollectionFragment : Fragment(R.layout.fragment_create_collection) {
             addCollectionToBD(newCollection, email)
 
             Toast.makeText(activity, "Coleccion guardada :)", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_createCollectionFragment_to_homeFragment) // navegar al home
             Log.i("colecciones", "${Collections.collectionsList}")
 
         }
-
-
     }
 
     private fun initRecycler() {
@@ -93,7 +93,6 @@ class CreateCollectionFragment : Fragment(R.layout.fragment_create_collection) {
     }
 
     companion object {
-
         fun deleteCollectionToBD(collection: Collection, email: String) {
             val refUser = FirebaseFirestore.getInstance().collection("users").document(email)
             //refUser.update("collections", FieldValue.arrayUnion(collection))
