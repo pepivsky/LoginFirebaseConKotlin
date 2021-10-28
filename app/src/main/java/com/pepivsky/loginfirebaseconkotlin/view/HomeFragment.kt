@@ -16,46 +16,21 @@ import com.google.firebase.firestore.ktx.toObject
 import com.pepivsky.loginfirebaseconkotlin.R
 import com.pepivsky.loginfirebaseconkotlin.model.Collection
 import com.pepivsky.loginfirebaseconkotlin.adapter.CollectionAdapter
+import com.pepivsky.loginfirebaseconkotlin.databinding.FragmentHomeBinding
 import com.pepivsky.loginfirebaseconkotlin.model.Collections
 import com.pepivsky.loginfirebaseconkotlin.model.User
 
 
-class HomeFragment : Fragment() {
-
-    private lateinit var rvCollections: RecyclerView
-    private lateinit var edtBuscar: EditText
-
+class HomeFragment : Fragment(R.layout.fragment_home) {
+    
+    lateinit var binding: FragmentHomeBinding
     private lateinit var email: String
     private val db = FirebaseFirestore.getInstance()
-
-
-    /*val collections = mutableListOf(
-        Collection("Verbos ingles"),
-        Collection("Fundamentos de POO"),
-        Collection("Patologias"),
-        Collection("tipos de notas musicales"),
-        Collection("Probando si el textview se puede ajustar y leerse bien cuando es largo")
-
-
-
-    )*/
-
-    //val lista = MutableListOf
-    //val listaColecciones = mutableListOf<Collection>()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
-    }
-
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentHomeBinding.bind(view)
 
-        rvCollections = view.findViewById(R.id.rvCollections)
-        //edtBuscar = view.findViewById(R.id.edtSearch)
         Collections.counter = 0
 
 
@@ -100,9 +75,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        rvCollections.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvCollections.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         val adapter = CollectionAdapter(Collections.collectionsList, email) //se le pasa la lista
-        rvCollections.adapter = adapter
+        binding.rvCollections.adapter = adapter
         //adapter.notifyDataSetChanged()
     }
 
