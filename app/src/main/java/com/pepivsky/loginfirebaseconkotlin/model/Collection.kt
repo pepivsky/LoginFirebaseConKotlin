@@ -1,7 +1,10 @@
 package com.pepivsky.loginfirebaseconkotlin.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-data class Collection(val tittle: String? = null, val listCard: MutableList<FlashCard>? = null)
+@Parcelize
+data class Collection(val tittle: String? = null, val listCard: MutableList<FlashCard>? = null) : Parcelable
 
 //object statico
 object Collections {

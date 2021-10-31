@@ -4,6 +4,7 @@ package com.pepivsky.loginfirebaseconkotlin.adapter
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.pepivsky.loginfirebaseconkotlin.model.Collection
@@ -36,6 +38,7 @@ class CollectionAdapter(val collections: List<Collection>, val email: String): R
     override fun onBindViewHolder(holder: CollectionHolder, position: Int) {
         val collection = holder.render(collections[position])
         val activity = holder.itemView.context as Activity
+
         //todo pasar el objeto al darle tap
         holder.binding.itemCollectionCard.setOnClickListener {
             val intent = Intent(activity, QuizzActivity::class.java )
@@ -44,7 +47,17 @@ class CollectionAdapter(val collections: List<Collection>, val email: String): R
             Log.i("Lista enviada", "${ArrayList(collections[position].listCard)}")
             Log.i("pos", " $position")
             activity.startActivity(intent)
+        }
 
+        holder.binding.btnEditCollection.setOnClickListener {
+            val bundle = Bundle()
+            //bundle.putParcelableArrayList("lista", ArrayList(collections[position].listCard))
+            // bundle.putString("dato", "Hello world")
+
+            // ya envia
+            bundle.putParcelable("colletion", collections[position])
+            //bundle.putInt("collection_index", position)
+            val navController = Navigation.findNavController(holder.itemView).navigate(R.id.action_homeFragment_to_createCollectionFragment, bundle)
         }
 
         holder.binding.btnDeleteCollection.setOnClickListener {
@@ -62,12 +75,7 @@ class CollectionAdapter(val collections: List<Collection>, val email: String): R
                 dialog.dismiss()
             }
             builder.show()
-
         }
-
-
-
-
     }
 
     override fun getItemCount() = collections.size

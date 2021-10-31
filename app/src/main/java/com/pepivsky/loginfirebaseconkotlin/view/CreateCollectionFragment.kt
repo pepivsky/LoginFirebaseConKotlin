@@ -3,18 +3,11 @@ package com.pepivsky.loginfirebaseconkotlin.view
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.pepivsky.loginfirebaseconkotlin.R
@@ -33,13 +26,12 @@ class CreateCollectionFragment : Fragment(R.layout.fragment_create_collection) {
     private val db = FirebaseFirestore.getInstance()
     private lateinit var email: String
 
+    val TAG = "CreateCollectionFragment"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentCreateCollectionBinding.bind(view)
 
-        flashCards.add(FlashCard(null, null))// primer item
-        initRecycler()
 
         //obteniendo el email desde las shared preferences
         val sharedPref = activity?.getSharedPreferences(
@@ -49,6 +41,23 @@ class CreateCollectionFragment : Fragment(R.layout.fragment_create_collection) {
         email = sharedPref?.getString("email", "email vacio").toString()
         Log.i("CCFragment", "$email")
 
+        arguments.let { bundle ->
+            // ya recibe la collection
+            val collection = bundle?.getParcelable<Collection>("colletion")
+            Log.d(TAG, "onViewCreated collection recibida: $collection ")
+
+            collection.let { collection ->
+                collection?.listCard?.let { flashCards.addAll(it) }
+                if (collection != null) {
+                    deleteCollectionToBD(collection, email) // borra de firestore
+                    Collections.collectionsList.remove(collection) // bora de la lista estatica
+                }
+            }
+            binding.edtTitle.setText(collection?.tittle)
+        }
+
+        flashCards.add(FlashCard(null, null))// primer item
+        initRecycler()
 
         //agregar otro item
         binding.fabAdd.setOnClickListener {
@@ -84,12 +93,18 @@ class CreateCollectionFragment : Fragment(R.layout.fragment_create_collection) {
     }
 
     private fun addCollectionToBD(collection: Collection, email: String) {
-        val refUser = db.collection("users").document(email)
-        refUser.update("collections", FieldValue.arrayUnion(collection))
+        val listCardFreeNull = collection.listCard?.filter { !it.concept.isNullOrBlank() && !it.definition.isNullOrBlank() }?.toMutableList()
+        val collectionFreeNull = collection.copy(tittle = collection.tittle, listCard = listCardFreeNull)
 
-        if (Collections.collectionsList.isNotEmpty()) {
-            Collections.collectionsList.add(collection)
-        }
+        Log.d(TAG, "addCollectionToBD: newCollection $collectionFreeNull")
+
+        val refUser = db.collection("users").document(email)
+        refUser.update("collections", FieldValue.arrayUnion(collectionFreeNull)) // agrega a firestore
+
+        /*if (Collections.collectionsList.isNotEmpty()) {
+            Collections.collectionsList.add(collectionFreeNull)
+        }*/
+        Collections.collectionsList.add(collectionFreeNull)
     }
 
     companion object {
@@ -101,14 +116,4 @@ class CreateCollectionFragment : Fragment(R.layout.fragment_create_collection) {
             //refUser.update("collections", FieldValue.delete())
         }
     }
-
-    /*override fun onResume() {
-        super.onResume()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
-    }*/
 }

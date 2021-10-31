@@ -1,14 +1,10 @@
 package com.pepivsky.loginfirebaseconkotlin.view
 
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import com.pepivsky.loginfirebaseconkotlin.R
 import com.pepivsky.loginfirebaseconkotlin.databinding.FragmentQuizzConceptBinding
 import com.pepivsky.loginfirebaseconkotlin.model.Collections
@@ -45,11 +41,11 @@ class QuizzFragmentConcept : Fragment(R.layout.fragment_quizz_concept), View.OnC
 
         //comprobar si la respuesta es correcta
         binding.btnDefinition1.setOnClickListener {
+            // TODO deshabilitar el boton para evitar el error al darle doble tap // it.isEnabled = false
             if (binding.btnDefinition1.text.toString()
                     .equals(card?.definition, true)
             ) { //aqui se compara el valor del texto del boton contra el del objeto card para saber si es la respuesta correcta
                 Log.i("QuizzFragmentConcept", "DefinicionCorrecta ${card?.definition}")
-                //binding.btnDefinition1.setBackgroundColor(resources.getColor(R.color.green, null))
                 colorizeCorrect(binding.btnDefinition1)
             } else {
                 Log.i("QuizzFragmentConcept", "Incorrecta")
