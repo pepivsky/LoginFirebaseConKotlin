@@ -56,12 +56,12 @@ class CreateCollectionFragment : Fragment(R.layout.fragment_create_collection) {
             binding.edtTitle.setText(collection?.tittle)
         }
 
-        flashCards.add(FlashCard(null, null))// primer item
+        flashCards.add(FlashCard("", ""))// primer item
         initRecycler()
 
         //agregar otro item
         binding.fabAdd.setOnClickListener {
-            flashCards.add(FlashCard(null, null))
+            flashCards.add(FlashCard("", "")) // agrega nuevo item con campos vacios
             adapter.notifyItemInserted(flashCards.size - 1)
             Toast.makeText(context, "Agregado! Size ${flashCards.size}", Toast.LENGTH_SHORT).show()
 
@@ -74,9 +74,13 @@ class CreateCollectionFragment : Fragment(R.layout.fragment_create_collection) {
 
             //guardando el nuevo objeto collection
             val newCollection = Collection(binding.edtTitle.text.toString(), flashCards)
-            //Collections.collectionsList.add(newCollection) //TODO guardar el objeto en Firebase
 
-            addCollectionToBD(newCollection, email)
+            if (newCollection.listCard.size < 3) {
+                Toast.makeText(context, "Tienes que crear al menos 3 flashcards", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            addCollectionToBD(newCollection, email) // guarda el nuevo objeto
 
             Toast.makeText(activity, "Coleccion guardada :)", Toast.LENGTH_SHORT).show()
             findNavController().navigate(R.id.action_createCollectionFragment_to_homeFragment) // navegar al home

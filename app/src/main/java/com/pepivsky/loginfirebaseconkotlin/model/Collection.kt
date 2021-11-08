@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Collection(val tittle: String? = null, val listCard: MutableList<FlashCard>? = null) : Parcelable
+data class Collection(val tittle: String = "", val listCard: MutableList<FlashCard> = mutableListOf()) : Parcelable
 
 //object statico
 object Collections {

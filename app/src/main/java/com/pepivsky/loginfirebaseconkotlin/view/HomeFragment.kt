@@ -60,7 +60,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             val user = documentSnapshot.toObject<User>()
             Log.i("Home", "${user?.collections}")
             if (user?.collections?.isNotEmpty() == true) {
-                user?.collections?.forEach { Collections.collectionsList.add(it) }
+                user.collections.forEach { Collections.collectionsList.add(it) }
                 initRecycler()
             } else { //lista vacia
                 //mostrar un mensaje o boton para crear una coleccion
