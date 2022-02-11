@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.commit
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
@@ -189,17 +188,17 @@ class QuizzActivity : AppCompatActivity(),  CardFragment.OnButtonListener, Quizz
 
     override fun onBackPressed() {
         //show dialog
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("¿Estás seguro que deseas salir?")
-        builder.setMessage("Perderás el progreso de tu sesión de estudio")
+        val dialogExit = AlertDialog.Builder(this)
+        dialogExit.setTitle("¿Estás seguro que deseas salir?")
+        dialogExit.setMessage("Perderás el progreso de tu sesión de estudio")
 
-        builder.setPositiveButton(R.string.dialog_exit) { dialog, which ->
+        dialogExit.setPositiveButton(R.string.dialog_exit) { _, _ ->
             super.onBackPressed()
         }
 
-        builder.setNegativeButton(R.string.dialog_cancel) { dialog, which ->
+        dialogExit.setNegativeButton(R.string.dialog_cancel) { dialog, _ ->
             dialog.dismiss()
         }
-        builder.show()
+        dialogExit.show()
     }
 }
