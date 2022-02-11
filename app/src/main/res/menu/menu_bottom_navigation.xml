@@ -16,12 +16,5 @@
         app:showAsAction="always"
         android:orderInCategory="1"/>
 
-    <item
-        android:id="@+id/profileFragment"
-        android:enabled="true"
-        android:icon="@drawable/account"
-        android:title="@string/text_profile"
-        app:showAsAction="always"
-        android:orderInCategory="1"/>
 
 </menu>
