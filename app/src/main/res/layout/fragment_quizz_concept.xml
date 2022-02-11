@@ -38,7 +38,6 @@
         android:text="definicion1"
 
         app:layout_constraintEnd_toEndOf="@+id/cardFront"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/cardFront"
         app:layout_constraintTop_toBottomOf="@+id/cardFront" />
 
@@ -50,7 +49,6 @@
         android:text="definicion2"
 
         app:layout_constraintEnd_toEndOf="@+id/btnDefinition1"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/btnDefinition1"
         app:layout_constraintTop_toBottomOf="@+id/btnDefinition1" />
 
@@ -63,7 +61,6 @@
         android:text="definicion3"
 
         app:layout_constraintEnd_toEndOf="@+id/btnDefinition2"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/btnDefinition2"
         app:layout_constraintTop_toBottomOf="@+id/btnDefinition2" />
 

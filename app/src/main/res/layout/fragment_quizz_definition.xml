@@ -15,7 +15,6 @@
         app:cardCornerRadius="10dp"
         app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline3">
 
@@ -36,7 +35,6 @@
         android:text="Concepto1"
 
         app:layout_constraintEnd_toEndOf="@+id/cardFront"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/cardFront"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
 
@@ -49,7 +47,6 @@
         android:text="Concepto2"
 
         app:layout_constraintEnd_toEndOf="@+id/btnConcept1"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/btnConcept1"
         app:layout_constraintTop_toBottomOf="@+id/btnConcept1" />
 
@@ -61,7 +58,6 @@
         android:text="Concepto3"
 
         app:layout_constraintEnd_toEndOf="@+id/btnConcept2"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/btnConcept2"
         app:layout_constraintTop_toBottomOf="@+id/btnConcept2" />
 
